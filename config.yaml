@@ -1,0 +1,82 @@
+#Contains config files for dataset to load
+dataset:
+  # single-data-split : accepts true or false values only
+  # if set to true, only provide a value for "unified-data-location",
+  # else test and train both needs to provide urls
+  single-data-source: true
+
+  # unified-data-location : A location for model to look for dataset.
+  # accepted values are absolute or relative local paths like ../data/xyz.csv
+  # or fully qualified URL on internet like https://foo.bar/data/xyz.csv
+  unified-data-location: https://foo.bar/data/xyz.csv
+
+  # test-data-location : Accepts same as unified-data-location except that whatever you provide
+  # will be used only to train your model. If you provide value for both "unified-data-location"
+  # and this, then "unified-single-data" is given preference and a warning is generated when
+  # script runs with that config 
+  train-data-location: 
+
+  # Same as pervious except here you will put the location of test-data that will only be used for 
+  # validation of model
+  test-data-location: 
+
+  # Format in which your data exists.
+  # Accepted values are : [csv, binary, ]
+  data-format: csv
+  
+model:
+
+  #Give this model a name for distinguishing it with others
+  name: 'Model_1'
+
+  # Learning rate for the model. A float value is required, if you don't know this hyperparameter,
+  # leave this field blank. Setting unwanted values will degrade your quality of model.
+  learning_rate: 0.003
+
+  # type of the model you are building. Only accepts value as [ feed_forward, convolution ]
+  # This helps us determine the architecture of the model we will build
+  type: feed_forward
+
+  # Number of Convolution layers in the network. Provide values depending upon your computer
+  # if type == "convolution" then layer_num is number of convolutional layers
+  # only applicable for convolution types
+  layer_num: 3
+
+  # Dense layer dimensions for the model. A comma separated values that defines how to share
+  # neurons in a model in different layer
+  # Only Hidden layer nerons size.
+  layer_dims: 128, 16
+
+  # epoch : The number of times to train the model on training set
+  epoch : 2
+
+  # batch_size : The number of datasets to process at one time
+  # This value should be higher. If your computer is powerful or less in non gpu based cpu's
+  # Keep this value as powers of 2
+  batch_size : 64
+
+  # input features count
+  input_shape : 784
+
+  #total labels
+  output_shape : 10
+
+
+  # The path to write the protobuffer_file to. default is current directory (.)
+  output_model_path: '.'
+
+
+# THIS SECTION IS ONLY USED IF TYPE ABOVE IS SET TO CONVOLUTION
+convolution:
+  
+  # Height of the convolution input image or tensor. A Integer value in pixel
+  height:
+    
+  # Height of the convolution input image or tensor. A Integer value in pixel
+  width:
+
+  # Channel of the convolution input image or tensor. 1 -for black AND white, 3 for RGB, 4 for RGBA
+  channel:
+
+  # Dropout for convolution and Dense layer of the model
+  dropout: 
