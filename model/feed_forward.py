@@ -19,7 +19,7 @@ from utils.config import Config
 import numpy as np
 import os.path
 import warnings
-from tqdm import trange
+from tqdm import trange, tqdm
 
 Y = 0
 X = 0
@@ -133,11 +133,21 @@ def train_network(config, train_x, train_y, validation_x, validation_y, optimize
         target_path = './tensorflow'
 
     # Generate the dataset pipeline
-    dataset = tf.data.Dataset.from_tensor_slices((train_x, train_y))
-    iter = dataset.shuffle(1000).repeat(epoch).batch(
-        batch_size).make_one_shot_iterator()
-    next_batch = iter.get_next()
+
+    #fixme(coder3101) : This segment is causing memory exhaustion
+    # this pipeline should be used with only GPU or large memory devices.
+
+# =============================================================================
+# | dataset = tf.data.Dataset.from_tensor_slices((train_x, train_y))           |
+# | iter = dataset.shuffle(1000).repeat(epoch).batch(                          |
+# |    batch_size).make_one_shot_iterator()                                    |
+# | next_batch = iter.get_next()                                               |
+# ==============================================================================
+
     # Memory Leaks if sess.run(iter.get_next())
+
+    # Falling back to naive approach for shuffled and batched data output
+
 
     saver = tf.train.Saver()
 
@@ -147,7 +157,7 @@ def train_network(config, train_x, train_y, validation_x, validation_y, optimize
             for inner in range(np.shape(train_x)[0] // batch_size):
                 batch_x, batch_y = sess.run(next_batch)
                 if inner % 100 == 0:
-                    print('Loss at epoch {} and iteration : {} is {}. '.format(i, inner, sess.run(
+                    tqdm.write('Loss at epoch {} and iteration : {} is {}. '.format(i, inner, sess.run(
                         loss, feed_dict={X: batch_x, Y: batch_y})))
                 if inner % 200 == 0:
                     print('Accuracy at epoch {} and iteration : {} is {}. '.format(i, inner, sess.run(

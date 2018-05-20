@@ -8,3 +8,4 @@ __pycache__
 
 # Do not include saved models
 /tensorflow/*
+.ipynb_checkpoints/Untitled-checkpoint.ipynb
