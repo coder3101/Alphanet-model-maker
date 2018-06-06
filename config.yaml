@@ -1,4 +1,5 @@
-#Contains config files for dataset to load
+# Contains config files for dataset to load
+
 dataset:
   # single-data-split : accepts true or false values only
   # if set to true, only provide a value for "unified-data-location",
@@ -14,14 +15,15 @@ dataset:
   # will be used only to train your model. If you provide value for both "unified-data-location"
   # and this, then "unified-single-data" is given preference and a warning is generated when
   # script runs with that config 
-  train-data-location: 
+  train-data-location: /mypc/somelocation/train_data.csv 
 
   # Same as pervious except here you will put the location of test-data that will only be used for 
   # validation of model
-  test-data-location: 
+  test-data-location: ../some_location/test_data.csv
 
   # Format in which your data exists.
-  # Accepted values are : [csv, binary, ]
+  # Accepted values are : [csv]
+  # More will be added soon
   data-format: csv
   
 model:
@@ -45,17 +47,17 @@ model:
   # Dense layer dimensions for the model. A comma separated values that defines how to share
   # neurons in a model in different layer
   # Only Hidden layer nerons size.
-  layer_dims: 128, 16
+  layer_dims: 256,128,64,32
 
   # epoch : The number of times to train the model on training set
-  epoch : 2
+  epoch : 5
 
   # batch_size : The number of datasets to process at one time
   # This value should be higher. If your computer is powerful or less in non gpu based cpu's
   # Keep this value as powers of 2
-  batch_size : 64
+  batch_size : 256
 
-  # input features count
+  # input features count, if its an image write 
   input_shape : 784
 
   #total labels

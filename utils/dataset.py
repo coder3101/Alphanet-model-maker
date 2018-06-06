@@ -32,14 +32,13 @@ class Dataset:
         [Dataset] -- A dataset object
     """
 
-    def __init__(self, total_data=None, split_ratio=None, batch=0, epoch=1):
+    def __init__(self, total_data=None, split_ratio=None, batch=0):
         self._full_data = total_data
         self._test_data = None
         self._train_data = None
         self._last_batch_test = 0
         self._last_batch_train = 0
         self._epoch_count = 0
-        self.epoch = epoch
         self._last_test_batch_shown = False
         self.batch_size = batch
         if split_ratio != None and total_data != None:
@@ -151,17 +150,11 @@ class Dataset:
             stop = batch_size+start
             self._last_batch_test = stop
             return test_data_x[start:stop], test_data_y[start:stop]
-        elif not self._last_test_batch_shown:
-            self._epoch_count += 1
-            warnings.warn(
-                'This should be the last call to next_batch_test. Completed the iteration')
-            self._last_test_batch_shown = True
-            start = self._last_batch_test
-            self._last_batch_test = len(test_data_x)
-            return test_data_x[start:], test_data_y[start:]
         else:
-            raise RuntimeError('Test data was exhaused and still')
-            # It is better to stop evalution iteration as soon as this error is thrown
+            start = self._last_batch_test-len(test_data_x)
+            stop = int(batch_size - (math.fabs(start)))
+            self._last_batch_test = stop
+            return test_data_x[start:stop], test_data_y[start:stop]
 
     def next_batch_from_train(self, batch_size=-1):
         """returns next batch from train set
@@ -192,6 +185,7 @@ class Dataset:
 
         else:
             start = self._last_batch_train-len(train_data_x)
-            stop = batch_size - (math.fabs(start))
+            stop = int(batch_size - (math.fabs(start)))
             self._epoch_count += 1
+            self._last_batch_train = stop
             return train_data_x[start:stop], train_data_y[start:stop]
